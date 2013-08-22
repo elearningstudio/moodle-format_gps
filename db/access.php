@@ -17,13 +17,12 @@
 defined('MOODLE_INTERNAL') || die();
 
 $capabilities = array(
-    // Can edit the course section colours
+    // Can edit the GPS format (free).
     'format/gps:editsection_geo' => array(
         'captype' => 'write',
         'contextlevel' => CONTEXT_COURSE,
         'legacy' => array(
              'manager' => CAP_ALLOW,
-             'coursecreator' => CAP_ALLOW,
              'editingteacher' => CAP_ALLOW
         )
     )

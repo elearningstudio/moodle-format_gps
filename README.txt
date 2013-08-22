@@ -6,7 +6,7 @@
 ================================================================================
 Description
 ================================================================================
-The „GPS Format Free“ allows e-learning content to be displayed according to the
+The GPS Format Free allows e-learning content to be displayed according to the
 geo coordinates of the learner. This enables location-based mobile learning. In
 events like a city rally, the learner walks between predefined locations using a
 smartphone or tablet PC. At these stations the learner gets certain information
@@ -52,11 +52,11 @@ ka:media Team could also help from time to time.
 ================================================================================
 Background information - why is the format called "free"
 ================================================================================
-ka:media developed the GPS course format in a „Pro“ version for Totara and its
+ka:media developed the GPS course format in a ï¿½Proï¿½ version for Totara and its
 own systems. The focus lies on country-specific learning, mobile learning in
 large commercial spaces and the efficient training of rescue and delivery
 services.
- 
+ï¿½
 The team discovered already in the developing process, that a GPS format will be
 a very helpful tool for a broad range of users, e.g. teachers or in tourism.
 To support the meanwhile great development of Moodle in the area of mobile
@@ -73,7 +73,7 @@ Version Information
   1. We changed the frankenstyle name of the plugin from format_kamedia_gps_free
      to the more simple format_gps. If you are updating from older versions, you
      will have to uninstall it completely and install this version as a new
-	 plugin.
+     plugin.
   2. Fixed the language file bug (the lang/en file contained lang/de data)
   3  Added body.format-gps prefix to all directives in style.css and
      geocoder_form.css

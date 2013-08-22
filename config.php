@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of the Kamedia GPS course format for Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -19,6 +18,5 @@
  * Optional course format configuration file. This file contains any specific
  * configuration settings for the format.
  */
-
-	//The default blocks layout for this course format:
-	$format['defaultblocks'] = ':';
+// The default blocks layout for this course format.
+$format['defaultblocks'] = ':';

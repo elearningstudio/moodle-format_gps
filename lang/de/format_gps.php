@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of the Kamedia GPS course format for Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -46,7 +45,6 @@ $string['yards'] = 'Yards';
 $string['feet'] = 'Feet';
 $string['miles'] = 'Meilen';
 $string['sharelocation'] = 'Sie können diesem Kurs nur dann beitreten, wenn Sie den Zugriff auf Ihre GPS Koordniaten erlauben';
-//$string['sectionheading'] = 'Abschnitt {$a} auf GPS Koordinaten beschränken';
 $string['active'] = 'Diesen Abschnitt auf spezifische GPS Koordinaten beschränken';
 $string['gpsrestricted'] = 'Nur mit korrekten GPS Koordinaten aufrufbar';
 $string['updateposition'] = 'Meine Position aktualisieren';

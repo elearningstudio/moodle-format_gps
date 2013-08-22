@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of the Kamedia GPS course format for Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -25,9 +24,11 @@
  * @author    2013 Barry Oosthuizen
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
 defined('MOODLE_INTERNAL') || die();
-require_once($CFG->dirroot. '/course/format/lib.php');
+require_once($CFG->dirroot . '/course/format/lib.php');
+require_once($CFG->dirroot . '/course/editsection_form.php');
+define('FORMAT_GPS_RESTRICTED', 1);
+define('FORMAT_GPS_UNRESTRICTED', 0);
 
 /**
  * Main class for the Topics course format
@@ -57,13 +58,12 @@ class format_gps extends format_base {
      */
     public function get_section_name($section) {
         $section = $this->get_section($section);
-        if ((string)$section->name !== '') {
-            return format_string($section->name, true,
-                    array('context' => context_course::instance($this->courseid)));
+        if ((string) $section->name !== '') {
+            return format_string($section->name, true, array('context' => context_course::instance($this->courseid)));
         } else if ($section->section == 0) {
             return get_string('section0name', 'format_gps');
         } else {
-            return get_string('topic').' '.$section->section;
+            return get_string('topic') . ' ' . $section->section;
         }
     }
 
@@ -107,7 +107,7 @@ class format_gps extends format_base {
                 if (!empty($options['navigation'])) {
                     return null;
                 }
-                $url->set_anchor('section-'.$sectionno);
+                $url->set_anchor('section-' . $sectionno);
             }
         }
         return $url;
@@ -137,7 +137,7 @@ class format_gps extends format_base {
      */
     public function extend_course_navigation($navigation, navigation_node $node) {
         global $PAGE;
-        // if section is specified in course/view.php, make sure it is expanded in navigation
+        // If section is specified in course/view.php, make sure it is expanded in navigation.
         if ($navigation->includesectionnum === false) {
             $selectedsection = optional_param('section', null, PARAM_INT);
             if ($selectedsection !== null && (!defined('AJAX_SCRIPT') || AJAX_SCRIPT == '0') &&
@@ -146,7 +146,7 @@ class format_gps extends format_base {
             }
         }
 
-        // check if there are callbacks to extend course navigation
+        // Check if there are callbacks to extend course navigation.
         parent::extend_course_navigation($navigation, $node);
     }
 
@@ -157,7 +157,7 @@ class format_gps extends format_base {
      *
      * @return array This will be passed in ajax respose
      */
-    function ajax_section_move() {
+    public function ajax_section_move() {
         global $PAGE;
         $titles = array();
         $course = $this->get_course();
@@ -275,8 +275,8 @@ class format_gps extends format_base {
      */
     public function update_course_format_options($data, $oldcourse = null) {
         if ($oldcourse !== null) {
-            $data = (array)$data;
-            $oldcourse = (array)$oldcourse;
+            $data = (array) $data;
+            $oldcourse = (array) $oldcourse;
             $options = $this->course_format_options();
             foreach ($options as $key => $unused) {
                 if (!array_key_exists($key, $data)) {
@@ -285,11 +285,11 @@ class format_gps extends format_base {
                     } else if ($key === 'numsections') {
                         // If previous format does not have the field 'numsections'
                         // and $data['numsections'] is not set,
-                        // we fill it with the maximum section number from the DB
+                        // we fill it with the maximum section number from the DB.
                         $maxsection = $DB->get_field_sql('SELECT max(section) from {course_sections}
                             WHERE course = ?', array($this->courseid));
                         if ($maxsection) {
-                            // If there are no sections, or just default 0-section, 'numsections' will be set to default
+                            // If there are no sections, or just default 0-section, 'numsections' will be set to default.
                             $data['numsections'] = $maxsection;
                         }
                     }
@@ -298,4 +298,152 @@ class format_gps extends format_base {
         }
         return $this->update_format_options($data);
     }
+
+    /**
+     * Definitions of the additional options that this course format uses for section
+     *
+     * See {@link format_base::course_format_options()} for return array definition.
+     *
+     * Additionally section format options may have property 'cache' set to true
+     * if this option needs to be cached in {@link get_fast_modinfo()}. The 'cache' property
+     * is recommended to be set only for fields used in {@link format_base::get_section_name()},
+     * {@link format_base::extend_course_navigation()} and {@link format_base::get_view_url()}
+     *
+     * For better performance cached options are recommended to have 'cachedefault' property
+     * Unlike 'default', 'cachedefault' should be static and not access get_config().
+     *
+     * Regardless of value of 'cache' all options are accessed in the code as
+     * $sectioninfo->OPTIONNAME
+     * where $sectioninfo is instance of section_info, returned by
+     * get_fast_modinfo($course)->get_section_info($sectionnum)
+     * or get_fast_modinfo($course)->get_section_info_all()
+     *
+     * All format options for particular section are returned by calling:
+     * $this->get_format_options($section);
+     *
+     * @param bool $foreditform
+     * @return array
+     */
+    public function section_format_options($foreditform = false) {
+        global $DB, $PAGE;
+
+        $id = optional_param('id', null, PARAM_INT);
+
+        if ($id == null) {
+            return array();
+        } else {
+            $section = $DB->get_record('course_sections', array('id' => $id), '*', MUST_EXIST);
+            $sectionnum = $section->section;
+
+            if ($sectionnum == 0) {
+                return array();
+            } else {
+                return array(
+                    'format_gps_restricted' => array(
+                        'type' => PARAM_INT,
+                        'label' => new lang_string('restricted', 'format_gps'),
+                        'element_type' => 'checkbox',
+                        'cache' => true,
+                        'default' => FORMAT_GPS_UNRESTRICTED,
+                    ),
+                    'format_gps_address' => array(
+                        'type' => PARAM_TEXT,
+                        'label' => new lang_string('address', 'format_gps'),
+                        'element_type' => 'textarea',
+                        'cache' => true,
+                        'default' => '',
+                    ),
+                    'format_gps_latitude' => array(
+                        'type' => PARAM_FLOAT,
+                        'label' => new lang_string('latitude', 'format_gps'),
+                        'element_type' => 'text',
+                        'cache' => true,
+                        'default' => '',
+                    ),
+                    'format_gps_longitude' => array(
+                        'type' => PARAM_FLOAT,
+                        'label' => new lang_string('longitude', 'format_gps'),
+                        'element_type' => 'text',
+                        'cache' => true,
+                        'default' => '',
+                    )
+                );
+            }
+        }
+    }
+
+    /**
+     * Adds format options elements to the course/section edit form
+     *
+     * This function is called from {@link course_edit_form::definition_after_data()}
+     *
+     * @param MoodleQuickForm $mform form the elements are added to
+     * @param bool $forsection 'true' if this is a section edit form, 'false' if this is course edit form
+     * @return array array of references to the added form elements
+     */
+    public function create_edit_form_elements(&$mform, $forsection = true) {
+        global $PAGE;
+
+        if ($PAGE->pagetype == 'course-edit') {
+            return;
+        }
+        $validationerror = optional_param('validationerror', null, PARAM_INT);
+        if ($validationerror == 'yes') {
+            $mform->addElement('static', 'validationerrror', new lang_string('validationerror', 'format_gps'));
+        }
+        $mform->addElement('header', 'gpssettings', new lang_string('editsection_geo', 'format_gps'));
+        $mform->addHelpButton('gpssettings', 'gpshelp', 'format_gps');
+        $mform->addElement('checkbox', 'format_gps_restricted', new lang_string('active', 'format_gps'));
+        $mform->setDefault('format_gps_restricted', 0);
+        $mform->addElement('text', 'format_gps_address', new lang_string('address', 'format_gps'));
+        $mform->setType('format_gps_address', PARAM_TEXT);
+        $mform->addElement('text', 'format_gps_latitude', new lang_string('latitude', 'format_gps'));
+        $mform->addElement('text', 'format_gps_longitude', new lang_string('longitude', 'format_gps'));
+        $mform->addRule('format_gps_address', null, 'maxlength', 255, 'client');
+        $mform->addRule('format_gps_longitude', null, 'numeric', null, 'client');
+        $mform->addRule('format_gps_longitude', null, 'numeric', null, 'client');
+        $mform->addRule('format_gps_latitude', null, 'numeric', null, 'client');
+        $mform->setType('format_gps_latitude', PARAM_FLOAT);
+        $mform->setType('format_gps_longitude', PARAM_FLOAT);
+        $mform->disabledIf('format_gps_address', 'format_gps_restricted', 'notchecked');
+        $mform->disabledIf('format_gps_latitude', 'format_gps_restricted', 'notchecked');
+        $mform->disabledIf('format_gps_longitude', 'format_gps_restricted', 'notchecked');
+        
+    }
+
+    public function editsection_form($action, $customdata = array()) {
+        global $CFG, $DB, $COURSE;
+
+        if (!array_key_exists('course', $customdata)) {
+            $customdata['course'] = $this->get_course();
+        }
+        $form = new editsection_form($action, $customdata);
+
+        if ($form->is_submitted()) {
+            $data = $form->get_data();
+            if ($data->format_gps_restricted == 0) {
+                try {
+                    $DB->delete_records('course_format_options', array(
+                        'format' => 'gps',
+                        'sectionid' => $data->id,
+                        'courseid' => $COURSE->id));
+                } catch (dml_exception $e) {
+                    return;
+                }
+                $url = new moodle_url('/course/view.php', array('id' => $COURSE->id));
+                redirect($url);
+            } else {
+                if ($data->format_gps_latitude == null || $data->format_gps_latitude == '' ||
+                        $data->format_gps_longitude == null || $data->format_gps_longitude == '') {
+                    $url = new moodle_url('/course/editsection.php', array(
+                                'id' => $data->id,
+                                'validationerror' => 'yes'));
+                    redirect($url);
+                }
+            }
+        }
+
+        return $form;
+    }
+
 }

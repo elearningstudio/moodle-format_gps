@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of the Kamedia GPS course format for Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -76,49 +75,49 @@ function format_gps_icon() {
     return $icon;
 }
 
-
 function format_gps_check_proximity($topic, $location) {
 
     $proximity = new stdClass();
 
-    $loc_lat = $topic->latitude;
-    $loc_long = $topic->longitude;
-    $loc_radius = $topic->radius;
-    $loc_unit = $topic->unit;
-    $user_lat = $location->latitude;
-    $user_long = $location->longitude;
+    $locationlatitude = $topic->format_gps_latitude;
+    $locationlongitude = $topic->format_gps_longitude;
+    $locationradius = 50;
+    $locationunit = 'mt';
+    $userlatitude = $location->latitude;
+    $userlongitude = $location->longitude;
 
-    // start of radius draw code
-    $earthRadiuses = array(
-        // The radius of the earth in various units
-        'mi' => 3963.1676, // miles
-        'km' => 6378.1, // kilometers
-        'ft' => 20925524.9, // feet
-        'mt' => 6378100, // meters
-        'yd' => 6975174.98 // yards
+    // Start of radius draw code.
+    $earthradiuses = array(
+        // The radius of the earth in various units.
+        'mi' => 3963.1676, // Miles.
+        'km' => 6378.1, // Kilometers.
+        'ft' => 20925524.9, // Feet.
+        'mt' => 6378100, // Meters.
+        'yd' => 6975174.98 // Yards.
     );
 
-    $distance = getDistance($user_lat, $user_long, $loc_lat, $loc_long, $earthRadiuses[$loc_unit]);
+    $distance = format_gps_get_distance($userlatitude, $userlongitude,
+            $locationlatitude, $locationlongitude, $earthradiuses[$locationunit]);
 
-    if ($distance > $loc_radius) {
-        // user is to far away
+    if ($distance > $locationradius) {
+        // User is to far away.
         $proximity->status = 'toofar';
     } else {
-        // user is within allowed radius
+        // User is within allowed radius.
         $proximity->status = 'ok';
     }
-    
     return $proximity;
 }
 
-function getDistance($latitude1, $longitude1, $latitude2, $longitude2, $earth_radius) {
+function format_gps_get_distance($latitude1, $longitude1, $latitude2, $longitude2, $earthradius) {
 
-    $dLat = deg2rad($latitude2 - $latitude1);
-    $dLon = deg2rad($longitude2 - $longitude1);
+    $latitudedifference = deg2rad($latitude2 - $latitude1);
+    $longitudedifference = deg2rad($longitude2 - $longitude1);
 
-    $a = sin($dLat / 2) * sin($dLat / 2) + cos(deg2rad($latitude1)) * cos(deg2rad($latitude2)) * sin($dLon / 2) * sin($dLon / 2);
+    $a = sin($latitudedifference / 2) * sin($latitudedifference / 2) + cos(deg2rad($latitude1))
+    * cos(deg2rad($latitude2)) * sin($longitudedifference / 2) * sin($longitudedifference / 2);
     $c = 2 * asin(sqrt($a));
-    $d = $earth_radius * $c;
+    $distance = $earthradius * $c;
 
-    return $d;
+    return $distance;
 }

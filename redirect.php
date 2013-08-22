@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of the Kamedia GPS course format for Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -37,10 +36,8 @@ echo '<div id="geo" class="geolocation_data"></div>';
 
 $PAGE->requires->js('/course/format/gps/geo/geo.js');
 
-$redirect = new moodle_url('/course/view.php', array('id' =>$courseid));
-$link = html_writer::link($redirect, get_string('continue', 'format_gps'), 
-        array('class' => 'gps-continue'));
+$redirect = new moodle_url('/course/view.php', array('id' => $courseid));
+$link = html_writer::link($redirect, get_string('continue', 'format_gps'), array('class' => 'gps-continue'));
 
 echo $link;
-
 echo $OUTPUT->footer();

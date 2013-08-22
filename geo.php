@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of the Kamedia GPS course format for Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -27,20 +26,19 @@ require_once(dirname(dirname(dirname(dirname(__FILE__)))) . '/config.php');
 
 global $USER, $DB;
 
-// get HTML5 geolocation data as populated on geo div
-list($user_lat, $user_long) = explode(',', htmlentities(htmlspecialchars(strip_tags($_GET['latlng']))));
+// Get HTML5 geolocation data as populated on geo div.
+list($userlatitude, $userlongitude) = explode(',', htmlentities(htmlspecialchars(strip_tags($_GET['latlng']))));
 
 $location = new stdClass();
 $location->userid = $USER->id;
-$location->latitude = $user_lat;
-$location->longitude = $user_long;
+$location->latitude = $userlatitude;
+$location->longitude = $userlongitude;
 $location->timemodified = time();
-$current_record = new stdClass();
+$currentrecord = new stdClass();
 
-if (!$current_record = $DB->get_record('format_gps_user', array("userid" => $USER->id,))) {
-    $insert = $DB->insert_record('format_gps_user', $location);
+if (!$currentrecord = $DB->get_record('format_gps_user', array("userid" => $USER->id))) {
+    $DB->insert_record('format_gps_user', $location);
 } else {
-    $location->id = $current_record->id;
-    $update = $DB->update_record('format_gps_user', $location);
+    $location->id = $currentrecord->id;
+    $DB->update_record('format_gps_user', $location);
 }
-?>

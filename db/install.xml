@@ -4,25 +4,7 @@
     xsi:noNamespaceSchemaLocation="../../../../lib/xmldb/xmldb.xsd"
 >
   <TABLES>
-    <TABLE NAME="format_gps" COMMENT="Data about the section settings for the 'Geo Topics' course format" NEXT="format_gps_user">
-      <FIELDS>
-        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" NEXT="courseid"/>
-        <FIELD NAME="courseid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Course that these colours are for" PREVIOUS="id" NEXT="section"/>
-        <FIELD NAME="section" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Section within the course that these colours are for" PREVIOUS="courseid" NEXT="latitude"/>
-        <FIELD NAME="latitude" TYPE="char" LENGTH="20" NOTNULL="false" SEQUENCE="false" COMMENT="Background colour for the main content" PREVIOUS="section" NEXT="longitude"/>
-        <FIELD NAME="longitude" TYPE="char" LENGTH="20" NOTNULL="false" SEQUENCE="false" COMMENT="Foreground colour for the content" PREVIOUS="latitude" NEXT="radius"/>
-        <FIELD NAME="radius" TYPE="char" LENGTH="20" NOTNULL="false" SEQUENCE="false" PREVIOUS="longitude" NEXT="address"/>
-        <FIELD NAME="address" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="Address descruotuib" PREVIOUS="radius" NEXT="unit"/>
-        <FIELD NAME="unit" TYPE="char" LENGTH="20" NOTNULL="false" SEQUENCE="false" COMMENT="radius unit" PREVIOUS="address" NEXT="modified"/>
-        <FIELD NAME="modified" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Timestamp when this was last modified" PREVIOUS="unit" NEXT="active"/>
-		<FIELD NAME="active" TYPE="int" LENGTH="1" NOTNULL="true" UNSIGNED="true" DEFAULT="1" SEQUENCE="false" COMMENT="the value if geo location restriction is active, either 1 or 0" PREVIOUS="modified"/>
-      </FIELDS>
-      <KEYS>
-        <KEY NAME="primary" TYPE="primary" FIELDS="id" NEXT="courseid"/>
-        <KEY NAME="courseid" TYPE="foreign" FIELDS="courseid" REFTABLE="course" REFFIELDS="id" PREVIOUS="primary"/>
-      </KEYS>
-    </TABLE>
-    <TABLE NAME="format_gps_user" COMMENT="Geo location of user" PREVIOUS="format_gps">
+    <TABLE NAME="format_gps_user" COMMENT="Geo location of user">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" NEXT="userid"/>
         <FIELD NAME="userid" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false" COMMENT="User ID" PREVIOUS="id" NEXT="latitude"/>
