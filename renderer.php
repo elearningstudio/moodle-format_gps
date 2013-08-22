@@ -101,17 +101,9 @@ class format_gps_renderer extends format_section_renderer_base {
             echo $this->start_section_list();
             echo $this->section_header($thissection, $course, true, $displaysection);
             $courserenderer = $PAGE->get_renderer('core', 'course');
-            if (method_exists($courserenderer, 'course_section_cm_list')) {
-                echo $courserenderer->course_section_cm_list($course, $thissection, $displaysection);  // Moodle 2.5.
-            } else {
-                print_section($course, $thissection, null, null, true, "100%", false, $displaysection); // Moodle 2.4 and lower.
-            }
+            print_section($course, $thissection, null, null, true, "100%", false, $displaysection);
             if ($PAGE->user_is_editing()) {
-                if (method_exists($courserenderer, 'course_section_add_cm_control')) {
-                    echo $courserenderer->course_section_add_cm_control($course, 0, $displaysection);  // Moodle 2.5.
-                } else {
-                    print_section_add_menus($course, 0, null, false, false, $displaysection); // Moodle 2.4 and lower.
-                }
+                print_section_add_menus($course, 0, null, false, false, $displaysection);
             }
             echo $this->section_footer();
             echo $this->end_section_list();
@@ -144,18 +136,10 @@ class format_gps_renderer extends format_section_renderer_base {
         echo $completioninfo->display_help_icon();
 
         $courserenderer = $PAGE->get_renderer('core', 'course');
-        if (method_exists($courserenderer, 'course_section_cm_list')) {
-            echo $courserenderer->course_section_cm_list($course, $thissection, $displaysection);  // Moodle 2.5.
-        } else {
-            print_section($course, $thissection, null, null, true, '100%', false, $displaysection); // Moodle 2.4 and lower.
-        }
+        print_section($course, $thissection, null, null, true, '100%', false, $displaysection);
 
         if ($PAGE->user_is_editing()) {
-            if (method_exists($courserenderer, 'course_section_add_cm_control')) {
-                echo $courserenderer->course_section_add_cm_control($course, $thissection, $displaysection);  // Moodle 2.5.
-            } else {
-                print_section_add_menus($course, $displaysection, null, false, false, $displaysection); // Moodle 2.4 and lower.
-            }
+            print_section_add_menus($course, $displaysection, null, false, false, $displaysection);
         }
         echo $this->section_footer();
         echo $this->end_section_list();
@@ -216,17 +200,9 @@ class format_gps_renderer extends format_section_renderer_base {
                 if ($thissection->summary or !empty($modinfo->sections[0]) or $PAGE->user_is_editing()) {
                     echo $this->section_header($thissection, $course, false, 0);
                     $courserenderer = $PAGE->get_renderer('core', 'course');
-                    if (method_exists($courserenderer, 'course_section_cm_list')) {
-                        echo $courserenderer->course_section_cm_list($course, $thissection, 0);  // Moodle 2.5.
-                    } else {
-                        print_section($course, $thissection, null, null, true, "100%", false, 0); // Moodle 2.4 and lower.
-                    }
+                    print_section($course, $thissection, null, null, true, "100%", false, 0);
                     if ($PAGE->user_is_editing()) {
-                        if (method_exists($courserenderer, 'course_section_add_cm_control')) {
-                            echo $courserenderer->course_section_add_cm_control($course, 0, 0);  // Moodle 2.5.
-                        } else {
-                            print_section_add_menus($course, 0, null, false, false, 0); // Moodle 2.4 and lower.
-                        }
+                        print_section_add_menus($course, 0, null, false, false, 0);
                     }
                     echo $this->section_footer();
                 }
@@ -283,17 +259,9 @@ class format_gps_renderer extends format_section_renderer_base {
                 echo $this->section_header($thissection, $course, false, 0);
                 if ($thissection->uservisible) {
                     $courserenderer = $PAGE->get_renderer('core', 'course');
-                    if (method_exists($courserenderer, 'course_section_cm_list')) {
-                        echo $courserenderer->course_section_cm_list($course, $thissection, 0);  // Moodle 2.5.
-                    } else {
-                        print_section($course, $thissection, null, null, true, "100%", false, 0); // Moodle 2.4 and lower.
-                    }
+                    print_section($course, $thissection, null, null, true, "100%", false, 0);
                     if ($PAGE->user_is_editing()) {
-                        if (method_exists($courserenderer, 'course_section_add_cm_control')) {
-                            echo $courserenderer->course_section_add_cm_control($course, $section, 0);  // Moodle 2.5.
-                        } else {
-                            print_section_add_menus($course, $section, null, false, false, 0); // Moodle 2.4 and lower.
-                        }
+                        print_section_add_menus($course, $section, null, false, false, 0);
                     }
                 }
                 echo $this->section_footer();
@@ -309,11 +277,7 @@ class format_gps_renderer extends format_section_renderer_base {
                 }
                 echo $this->stealth_section_header($section);
                 $courserenderer = $PAGE->get_renderer('core', 'course');
-                if (method_exists($courserenderer, 'course_section_cm_list')) {
-                    echo $courserenderer->course_section_cm_list($course, $thissection, 0);  // Moodle 2.5.
-                } else {
-                    print_section($course, $thissection, null, null, true, "100%", false, 0); // Moodle 2.4 and lower.
-                }
+                print_section($course, $thissection, null, null, true, "100%", false, 0);
                 echo $this->stealth_section_footer();
             }
             echo $this->end_section_list();
