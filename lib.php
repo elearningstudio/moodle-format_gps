@@ -1,5 +1,5 @@
 <?php
-// This file is part of the Kamedia GPS course format for Moodle - http://moodle.org/
+// This file is part of the GPS free course format for Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -327,49 +327,47 @@ class format_gps extends format_base {
     public function section_format_options($foreditform = false) {
         global $DB, $PAGE;
 
-        $id = optional_param('id', null, PARAM_INT);
+        if ($PAGE->pagetype == 'course-editsection') {
+            $id = optional_param('id', null, PARAM_INT);
 
-        if ($id == null) {
-            return array();
-        } else {
             $section = $DB->get_record('course_sections', array('id' => $id), '*', MUST_EXIST);
             $sectionnum = $section->section;
 
             if ($sectionnum == 0) {
                 return array();
-            } else {
-                return array(
-                    'format_gps_restricted' => array(
-                        'type' => PARAM_INT,
-                        'label' => new lang_string('restricted', 'format_gps'),
-                        'element_type' => 'checkbox',
-                        'cache' => true,
-                        'default' => FORMAT_GPS_UNRESTRICTED,
-                    ),
-                    'format_gps_address' => array(
-                        'type' => PARAM_TEXT,
-                        'label' => new lang_string('address', 'format_gps'),
-                        'element_type' => 'textarea',
-                        'cache' => true,
-                        'default' => '',
-                    ),
-                    'format_gps_latitude' => array(
-                        'type' => PARAM_FLOAT,
-                        'label' => new lang_string('latitude', 'format_gps'),
-                        'element_type' => 'text',
-                        'cache' => true,
-                        'default' => '',
-                    ),
-                    'format_gps_longitude' => array(
-                        'type' => PARAM_FLOAT,
-                        'label' => new lang_string('longitude', 'format_gps'),
-                        'element_type' => 'text',
-                        'cache' => true,
-                        'default' => '',
-                    )
-                );
             }
         }
+
+        return array(
+            'format_gps_restricted' => array(
+                'type' => PARAM_INT,
+                'label' => new lang_string('restricted', 'format_gps'),
+                'element_type' => 'checkbox',
+                'cache' => true,
+                'default' => FORMAT_GPS_UNRESTRICTED,
+            ),
+            'format_gps_address' => array(
+                'type' => PARAM_TEXT,
+                'label' => new lang_string('address', 'format_gps'),
+                'element_type' => 'textarea',
+                'cache' => true,
+                'default' => '',
+            ),
+            'format_gps_latitude' => array(
+                'type' => PARAM_FLOAT,
+                'label' => new lang_string('latitude', 'format_gps'),
+                'element_type' => 'text',
+                'cache' => true,
+                'default' => '',
+            ),
+            'format_gps_longitude' => array(
+                'type' => PARAM_FLOAT,
+                'label' => new lang_string('longitude', 'format_gps'),
+                'element_type' => 'text',
+                'cache' => true,
+                'default' => '',
+            )
+        );
     }
 
     /**
@@ -389,7 +387,10 @@ class format_gps extends format_base {
         }
         $validationerror = optional_param('validationerror', null, PARAM_INT);
         if ($validationerror == 'yes') {
-            $mform->addElement('static', 'validationerrror', new lang_string('validationerror', 'format_gps'));
+            $error = html_writer::div(new lang_string('validationerror', 'format_gps_pro'), 'bold red error');
+            $errorlabel = html_writer::div(new lang_string('error'), 'bold red error');
+            $mform->addElement('static', 'validationerrror', $errorlabel, $error);
+            $mform->addHelpButton('validationerrror', 'errorhelp', 'format_gps_pro');
         }
         $mform->addElement('header', 'gpssettings', new lang_string('editsection_geo', 'format_gps'));
         $mform->addHelpButton('gpssettings', 'gpshelp', 'format_gps');
@@ -421,20 +422,10 @@ class format_gps extends format_base {
 
         if ($form->is_submitted()) {
             $data = $form->get_data();
-            if ($data->format_gps_restricted == 0) {
-                try {
-                    $DB->delete_records('course_format_options', array(
-                        'format' => 'gps',
-                        'sectionid' => $data->id,
-                        'courseid' => $COURSE->id));
-                } catch (dml_exception $e) {
-                    return;
-                }
-                $url = new moodle_url('/course/view.php', array('id' => $COURSE->id));
-                redirect($url);
-            } else {
-                if ($data->format_gps_latitude == null || $data->format_gps_latitude == '' ||
-                        $data->format_gps_longitude == null || $data->format_gps_longitude == '') {
+
+            if ($data->format_gps_pro_restricted == '1') {
+                if ($data->format_gps_pro_latitude == null || $data->format_gps_pro_latitude == '' ||
+                        $data->format_gps_pro_longitude == null || $data->format_gps_pro_longitude == '') {
                     $url = new moodle_url('/course/editsection.php', array(
                                 'id' => $data->id,
                                 'validationerror' => 'yes'));
