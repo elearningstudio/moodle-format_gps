@@ -59,5 +59,6 @@ $string['sectionname'] = 'Abschnitt';
 $string['sharelocation'] = 'Sie können diesem Kurs nur dann beitreten, wenn Sie den Zugriff auf Ihre GPS Koordniaten erlauben';
 $string['showfromothers'] = 'Abschnitt anzeigen';
 $string['unrestricted'] = 'Nicht durch Standort eingeschränkt';
+$string['updatepage'] = 'Update course page';
 $string['updateposition'] = 'Meine Position aktualisieren';
 $string['yards'] = 'Yards';

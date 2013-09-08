@@ -56,6 +56,7 @@ $string['section0name'] = 'General';
 $string['sectionname'] = 'Topic';
 $string['sharelocation'] = 'This course can only be accessed if you agree to share your GPS location';
 $string['showfromothers'] = 'Show topic';
+$string['updatepage'] = 'Update course page';
 $string['updateposition'] = 'Update my position';
 $string['unrestricted'] = 'Not restricted by Geo location';
 $string['yards'] = 'Yards';

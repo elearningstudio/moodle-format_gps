@@ -57,3 +57,13 @@ if (!empty($displaysection)) {
 
 // Include course format js module.
 $PAGE->requires->js('/course/format/gps/format.js');
+
+$PAGE->requires->yui_module('moodle-format_gps-geo', 'M.format_gps.init_geo', null, null, true);
+$PAGE->requires->js(new moodle_url('https://maps.googleapis.com/maps/api/js',
+                array(
+                    'key' => $CFG->googlemapkey3,
+                    'sensor' => 'true',
+                    'libraries' => 'places'
+        )));
+
+$PAGE->requires->yui_module('moodle-format_gps-popupgeo', 'M.format_gps.init_popupgeo', null, null, true);

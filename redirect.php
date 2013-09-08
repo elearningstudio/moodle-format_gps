@@ -34,7 +34,7 @@ $PAGE->set_heading(get_string('sharelocation', 'format_gps'));
 
 echo '<div id="geo" class="geolocation_data"></div>';
 
-$PAGE->requires->js('/course/format/gps/geo/geo.js');
+$PAGE->requires->yui_module('moodle-format_gps-geo', 'M.format_gps.init_geo', null, null, true);
 
 $redirect = new moodle_url('/course/view.php', array('id' => $courseid));
 $link = html_writer::link($redirect, get_string('continue', 'format_gps'), array('class' => 'gps-continue'));

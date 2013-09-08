@@ -1,5 +1,5 @@
 <?php
-// This file is part of the GPS free course format for Moodle - http://moodle.org/
+// This file is part of the Kamedia GPS course format for Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -22,23 +22,34 @@
  * @author Barry Oosthuizen
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+define('AJAX_SCRIPT', true);
+
 require_once(dirname(dirname(dirname(dirname(__FILE__)))) . '/config.php');
+require_sesskey();
+require_login();
 
-global $USER, $DB;
-
-// Get HTML5 geolocation data as populated on geo div.
-list($userlatitude, $userlongitude) = explode(',', htmlentities(htmlspecialchars(strip_tags($_GET['latlng']))));
+$userlatitude = optional_param('latitude', null, PARAM_FLOAT);
+$userlongitude = optional_param('longitude', null, PARAM_FLOAT);
 
 $location = new stdClass();
 $location->userid = $USER->id;
 $location->latitude = $userlatitude;
 $location->longitude = $userlongitude;
 $location->timemodified = time();
-$currentrecord = new stdClass();
 
-if (!$currentrecord = $DB->get_record('format_gps_user', array("userid" => $USER->id))) {
-    $DB->insert_record('format_gps_user', $location);
-} else {
+if ($currentrecord = $DB->get_record('format_gps_user', array("userid" => $USER->id))) {
     $location->id = $currentrecord->id;
-    $DB->update_record('format_gps_user', $location);
+    try {
+        $DB->update_record('format_gps_user', $location);
+    } catch (dml_exception $e) {
+        echo json_encode($e->debuginfo . ', ' . $e->getTraceAsString());
+    }
+
+} else {
+    try {
+        $DB->insert_record('format_gps_user', $location);
+    } catch (dml_exception $e) {
+        echo json_encode($e->debuginfo. ', ' . $e->getTraceAsString());
+    }
+    
 }

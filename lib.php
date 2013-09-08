@@ -387,10 +387,10 @@ class format_gps extends format_base {
         }
         $validationerror = optional_param('validationerror', null, PARAM_INT);
         if ($validationerror == 'yes') {
-            $error = html_writer::div(new lang_string('validationerror', 'format_gps_pro'), 'bold red error');
+            $error = html_writer::div(new lang_string('validationerror', 'format_gps'), 'bold red error');
             $errorlabel = html_writer::div(new lang_string('error'), 'bold red error');
             $mform->addElement('static', 'validationerrror', $errorlabel, $error);
-            $mform->addHelpButton('validationerrror', 'errorhelp', 'format_gps_pro');
+            $mform->addHelpButton('validationerrror', 'errorhelp', 'format_gps');
         }
         $mform->addElement('header', 'gpssettings', new lang_string('editsection_geo', 'format_gps'));
         $mform->addHelpButton('gpssettings', 'gpshelp', 'format_gps');
@@ -423,9 +423,9 @@ class format_gps extends format_base {
         if ($form->is_submitted()) {
             $data = $form->get_data();
 
-            if ($data->format_gps_pro_restricted == '1') {
-                if ($data->format_gps_pro_latitude == null || $data->format_gps_pro_latitude == '' ||
-                        $data->format_gps_pro_longitude == null || $data->format_gps_pro_longitude == '') {
+            if ($data->format_gps_restricted == '1') {
+                if ($data->format_gps_latitude == null || $data->format_gps_latitude == '' ||
+                        $data->format_gps_longitude == null || $data->format_gps_longitude == '') {
                     $url = new moodle_url('/course/editsection.php', array(
                                 'id' => $data->id,
                                 'validationerror' => 'yes'));
