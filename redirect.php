@@ -1,5 +1,5 @@
 <?php
-// This file is part of the GPS free course format for Moodle - http://moodle.org/
+// This file is part of the Kamedia GPS course format for Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -32,12 +32,20 @@ $PAGE->set_pagelayout('standard');
 $PAGE->set_title($course->shortname . ': ' . get_string('sharelocation', 'format_gps'));
 $PAGE->set_heading(get_string('sharelocation', 'format_gps'));
 
-echo '<div id="geo" class="geolocation_data"></div>';
+$PAGE->requires->yui_module('moodle-format_gps-geo', 'M.format_gps.init_geo', null, null, true);
+$PAGE->requires->js(new moodle_url('https://maps.googleapis.com/maps/api/js',
+                array(
+                    'key' => $CFG->googlemapkey3,
+                    'sensor' => 'true',
+                    'libraries' => 'places'
+        )));
 
-$PAGE->requires->js('/course/format/gps/geo/geo.js');
-
+$PAGE->requires->yui_module('moodle-format_gps-redirectgeo', 'M.format_gps.init_redirectgeo', null, null, true);
 $redirect = new moodle_url('/course/view.php', array('id' => $courseid));
 $link = html_writer::link($redirect, get_string('continue', 'format_gps'), array('class' => 'gps-continue'));
 
+$map = html_writer::tag('div', '', array('id' => 'map', 'class' => 'googlemap'));
+$mapcontainer = html_writer::tag('div', $map, array('id' => 'mapcontainer', 'class' => 'mapcontainer'));
+echo $mapcontainer;
 echo $link;
 echo $OUTPUT->footer();

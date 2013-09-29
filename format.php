@@ -1,5 +1,5 @@
 <?php
-// This file is part of the GPS free course format for Moodle - http://moodle.org/
+// This file is part of the Kamedia GPS course format for Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -54,6 +54,12 @@ if (!empty($displaysection)) {
 } else {
     $renderer->print_multiple_section_page($course, null, null, null, null);
 }
-
-// Include course format js module.
+$PAGE->requires->yui_module('moodle-format_gps-geo', 'M.format_gps.init_geo', null, null, true);
 $PAGE->requires->js('/course/format/gps/format.js');
+$PAGE->requires->js(new moodle_url('https://maps.googleapis.com/maps/api/js',
+                array(
+                    'key' => $CFG->googlemapkey3,
+                    'sensor' => 'true',
+                    'libraries' => 'places'
+        )));
+$PAGE->requires->yui_module('moodle-format_gps-popupgeo', 'M.format_gps.init_popupgeo', null, null, true);

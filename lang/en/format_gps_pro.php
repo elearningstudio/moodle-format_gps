@@ -1,5 +1,5 @@
 <?php
-// This file is part of the GPS free course format for Moodle - http://moodle.org/
+// This file is part of the GPS Free course format for Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -19,30 +19,34 @@
  *
  * @package   format_gps
  * @copyright 2013 Barry Oosthuizen
+ * @author    Barry Oosthuizen http://elearningstudio.co.uk
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 $string['active'] = 'Restrict this topic to a specific GPS location';
 $string['address'] = 'Location description';
 $string['continue'] = 'Click here to continue';
 $string['currentsection'] = 'This topic';
-$string['editgeolocation'] = 'GPS Location settings';
+$string['editgeolocation'] = 'GPS location settings';
 $string['editsection_geo'] = 'Edit GPS location settings for this topic section';
+$string['editsection_geo_heading'] = 'GPS location settings';
 $string['errorhelp'] = 'Form validation error'; 
-$string['errorhelp_help'] = 'Latitude and Longitude are required fields if you restrict the topic to a location.';
+$string['errorhelp_help'] = 'Latitude and Longitude are required fields if you restrict the topic to a location.'; 
 $string['feet'] = 'Feet';
-$string['gpshelp'] = 'GPS settings for topics'; 
-$string['gpshelp_help'] = "With GPS settings you can restrict the visability of a topic ".
+$string['googlemapkey3error'] = 'You need to specify a Google maps 3 API key for your site before you can use Google maps'; 
+$string['gpshelp_help'] = 'GPS settings for topics'; 
+$string['gpshelp'] = "With GPS settings you can restrict the visability of a topic ".
         "to only shown if a learner has a GPS enabled device, has allowed their GPS location ".
         "to be shared with Moodle and if he or she is at the location you specify here. ".
-        "Hint: GPS settings are deleted if you change the course format to another format. ".
-        "GPS Settings are also deleted if you deactivate them.";
-$string['gpsrestricted'] = 'This section is restricted by GPS location';
-$string['gps_restricted'] = 'This topic has been restricted to a specific GPS location';
-$string['hidefromothers'] = 'Hide topic';
+        "Hint: GPS settings are deleted if you change the course format to another format.";
 $string['gps:editsection_geo'] = 'Edit GPS location settings';
+$string['gps_restricted'] = 'This topic has been restricted to a specific GPS location';
+$string['gpsrestricted'] = 'Only available at the right GPS position';
+$string['hidefromothers'] = 'Hide topic';
 $string['kilometers'] = 'Kilometers';
 $string['latitude'] = 'Latitude of location';
 $string['longitude'] = 'Longitude of location';
+$string['loadinggps'] = 'Loading GPS';
+$string['mapinfo'] = "Click on the map to specify a position, then click on a green marker to use the position's GPS data";
 $string['meters'] = 'Meters';
 $string['miles'] = 'Miles';
 $string['notallowed'] = 'Update your position to unhide this GPS restricted topic';
@@ -54,8 +58,11 @@ $string['radius'] = 'Radius allowed';
 $string['restricted'] = 'Restricted by Geo location';
 $string['section0name'] = 'General';
 $string['sectionname'] = 'Topic';
+$string['setgooglemapkey3'] = 'Click here to set your Google Maps 3 API key now'; 
 $string['sharelocation'] = 'This course can only be accessed if you agree to share your GPS location';
 $string['showfromothers'] = 'Show topic';
-$string['updateposition'] = 'Update my position';
 $string['unrestricted'] = 'Not restricted by Geo location';
+$string['updateposition'] = 'Update my position';
+$string['updatepage'] = 'Update course page';
+$string['validationerror'] = 'There was a problem with the values you entered in the form.  Please correct any errors and resubmit the form.';
 $string['yards'] = 'Yards';
