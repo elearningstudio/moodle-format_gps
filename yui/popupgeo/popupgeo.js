@@ -36,7 +36,6 @@ YUI.add('moodle-format_gps-popupgeo', function(Y) {
     Y.extend(popupgeo, Y.Base, {
         initializer : function () {
 
-            //Y.one('#updatepositionredirect').addClass('hide');
             Y.one('#updatepositionclick').removeClass('hide');
 
             // Try HTML5 geolocation

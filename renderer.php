@@ -46,17 +46,9 @@ class format_gps_renderer extends format_section_renderer_base {
      */
     public function print_single_section_page($course, $sections, $mods, $modnames, $modnamesused, $displaysection) {
         global $PAGE, $SESSION, $DB;
-        //$redirecturl = new moodle_url('/course/format/gps/redirect.php', array('courseid' => $course->id));
+
         $updateposition = get_string('updateposition', 'format_gps');
-        /**
-        $redirectlink = html_writer::link($redirecturl, $updateposition,
-                array(
-                    'class' => 'updateposition show',
-                    'id' => 'updatepositionredirect'));
-         * 
-         */
         $modaldiv = html_writer::div($updateposition, 'updateposition hide', array('id' => 'updatepositionclick'));
-        //echo $redirectlink . $modaldiv;
         echo $modaldiv;
 
         // Module form with map.
@@ -192,17 +184,8 @@ class format_gps_renderer extends format_section_renderer_base {
     public function print_multiple_section_page($course, $sections, $mods, $modnames, $modnamesused) {
         global $PAGE, $SESSION, $DB, $USER;
 
-        //$redirecturl = new moodle_url('/course/format/gps/redirect.php', array('courseid' => $course->id));
         $updateposition = get_string('updateposition', 'format_gps');
-        /**
-        $redirectlink = html_writer::link($redirecturl, $updateposition,
-                array(
-                    'class' => 'updateposition show',
-                    'id' => 'updatepositionredirect'));
-         * 
-         */
         $modaldiv = html_writer::div($updateposition, 'updateposition hide', array('id' => 'updatepositionclick'));
-        //echo $redirectlink . $modaldiv;
         echo $modaldiv;
 
         // Module form with map.
