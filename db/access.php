@@ -17,7 +17,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 $capabilities = array(
-    // Can edit the course section colours.
+    // Can edit the course section.
     'format/gps:editsection_geo' => array(
         'captype' => 'write',
         'contextlevel' => CONTEXT_COURSE,
