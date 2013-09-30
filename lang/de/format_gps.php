@@ -1,5 +1,5 @@
 <?php
-// This file is part of the GPS free course format for Moodle
+// This file is part of the GPS Free course format for Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -19,6 +19,7 @@
  *
  * @package   format_gps
  * @copyright 2013 Barry Oosthuizen
+ * @author    Barry Oosthuizen http://elearningstudio.co.uk
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 $string['active'] = 'Diesen Abschnitt auf spezifische GPS Koordinaten beschränken';
@@ -26,39 +27,43 @@ $string['address'] = 'Standortbeschreibung';
 $string['continue'] = 'Hier klicken, um fortzufahren';
 $string['currentsection'] = 'Dieser Abschnitt';
 $string['editgeolocation'] = 'GPS Koordinaten Einstellungen';
-$string['editsection_geo'] = 'GPS Einstellungen für diesen Abschnitt bearbeiten';
+$string['editsection_geo'] = 'GPS Koordinaten Einstellungen für diesen Abschnitt bearbeiten';
+$string['editsection_geo_heading'] = '';
 $string['errorhelp'] = 'Form validation error'; 
 $string['errorhelp_help'] = 'Latitude and Longitude are required fields if you restrict the topic to a location.';
+$string['expandmap'] = 'Use interactive map';
 $string['feet'] = 'Feet';
-$string['gpshelp'] = 'GPS Einstellungen'; 
-$string['gpshelp_help'] = "Mit den GPS Einstellungen können Sie die Sichtbarkeit 
-    eines Kursabschnitts einschränken. Lernende, die ein GPS taugliches Endgerät besitzen, 
-    das Versenden ihrer Position an Moodle erlauben und an der von Ihnen vorgegebenen GPS 
-    Position sind, können diesen Kursabschnitt sehen.
-Hinweis: Wenn Sie das Kursformat dieses Kurses auf ein anderes Format umstellen, werden
-die von Ihnen gemachten GPS Einstellungen gelöscht. GPS Einstellungen werden ebenso gelöscht,
-wenn Sie diese deaktivieren.";
-$string['gpsrestricted'] = 'Nur mit korrekten GPS Koordinaten aufrufbar';
-$string['gps_restricted'] = 'Dieser Abschnitt ist auf spezifische GPS Koordinaten beschränkt';
+$string['googlemapkey3error'] = 'You need to specify a Google maps 3 API key for your site before you can use Google maps'; 
+$string['gpshelp_help'] = 'GPS settings for topics'; 
+$string['gpshelp'] = "With GPS settings you can restrict the visability of a topic ".
+        "to only shown if a learner has a GPS enabled device, has allowed their GPS location ".
+        "to be shared with Moodle and if he or she is at the location you specify here. ".
+        "Hint: GPS settings are deleted if you change the course format to another format.";
 $string['gps:editsection_geo'] = 'GPS Koordinaten Einstellungen bearbeiten';
+$string['gps_restricted'] = 'Dieser Abschnitt ist auf spezifische GPS Koordinaten beschränkt';
+$string['gpsrestricted'] = 'Nur mit korrekten GPS Koordinaten aufrufbar';
 $string['hidefromothers'] = 'Abschnitt verbergen';
+$string['kilometers'] = 'Kilometer';
 $string['latitude'] = 'Breitengrad dieses Standorts';
 $string['longitude'] = 'Längengrad dieses Standorts';
-$string['miles'] = 'Meilen';
-$string['kilometers'] = 'Kilometer';
+$string['loadinggps'] = 'Loading GPS';
+$string['mapinfo'] = "Klicken Sie auf die Karte um eine Position genau auszuwählen, danach auf eine Markierung um die GPS Daten zu übernehmen.";
 $string['meters'] = 'Meter';
-$string['notallowed'] = 'Aktualisieren Sie Ihre Position, an bestimmten GPS Koordinaten wird dieser Abschnitt angezeigt.';
+$string['miles'] = 'Meilen';
+$string['notallowed'] = 'Update your position to unhide this GPS restricted topic';
 $string['page-course-view-gps'] = 'Jede Kursübersicht im GPS format';
 $string['page-course-view-gps-x'] = 'Jede Kursseite im GPS format';
-$string['pluginname'] = 'GPS Format Free';
-$string['pluginname_help'] = 'Das GPS Kursformat ermöglicht es Ihnen, ausgewählte Kursabschnitte auf spezifische GPS Koordinaten zu beschränken. Der ensprechende Abschnitt wird für den Teilnehmer erst zugänglich, wenn dieser sich im Radius von 100 Metern um den angegebenen Standort befindet.';
+$string['pluginname'] = 'GPS Free Format';
+$string['pluginname_help'] = 'Das GPS Kursformat ermöglicht es Ihnen, ausgewählte Kursabschnitte auf spezifische GPS Koordinaten zu beschränken. Der ensprechende Abschnitt wird für den Teilnehmer erst zugänglich, wenn dieser sich innerhalb des gewählten Standortradius befindet.';
 $string['radius'] = 'Erlaubter Radius';
-$string['restricted'] = 'Durch Standord eingeschränkt';
+$string['restricted'] = 'Restricted by Geo location';
 $string['section0name'] = 'Allgemeines';
 $string['sectionname'] = 'Abschnitt';
+$string['setgooglemapkey3'] = 'Click here to set your Google Maps 3 API key now'; 
 $string['sharelocation'] = 'Sie können diesem Kurs nur dann beitreten, wenn Sie den Zugriff auf Ihre GPS Koordniaten erlauben';
 $string['showfromothers'] = 'Abschnitt anzeigen';
-$string['unrestricted'] = 'Nicht durch Standort eingeschränkt';
+$string['unrestricted'] = 'Not restricted by Geo location';
 $string['updatepage'] = 'Update course page';
 $string['updateposition'] = 'Meine Position aktualisieren';
+$string['validationerror'] = 'There was a problem with the values you entered in the form.  Please correct any errors and resubmit the form.';
 $string['yards'] = 'Yards';

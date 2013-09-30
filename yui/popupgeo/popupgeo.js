@@ -19,7 +19,7 @@
  *  https://code.google.com/p/gmaps-samples-v3/source/browse/trunk/geocoder/v3-geocoder-tool.html
  *  Copyright 2010 Google Inc.
  *
- *  Modified to work with YUI in Moodle as part of the GPS Pro course format by Barry Oosthuizen 2013
+ *  Modified to work with YUI in Moodle as part of the GPS Free course format by Barry Oosthuizen 2013
  * */
 
 YUI.add('moodle-format_gps-popupgeo', function(Y) {
@@ -35,7 +35,42 @@ YUI.add('moodle-format_gps-popupgeo', function(Y) {
 
     Y.extend(popupgeo, Y.Base, {
         initializer : function () {
+            Y.on('windowresize', function(e) {
 
+                var popupgeo = Y.one('.yui3-panel #popupgeo');
+                var target = e.target, height, width;
+                var winwidth = target.get('winWidth');
+                var winheight = target.get('winHeight');
+                var googlemap = Y.one('.googlemap');
+                var mapcontainer = Y.one('#mapcontainer');
+
+                height = (winheight * 0.9);
+                width = (winwidth * 0.9);
+
+                if (winwidth < 980) {
+                    width = winwidth - 4;
+                    height = winheight - 50;
+                }
+                console.log('Win Width: ' + winwidth + ', Win height: ' + winheight);
+                console.log('Width: ' + width + ', height: ' + height);
+                googlemap.set('offsetHeight', height - 80);
+                googlemap.set('offsetWidth', width - 5);
+                mapcontainer.set('offsetHeight', height);
+                mapcontainer.set('offsetWidth', width - 3);
+                popupgeo.set('offsetHeight', height);
+                popupgeo.set('offsetWidth', width);
+                left = 50;
+                top = 50;
+                if (winwidth < 980 ) {
+                    left = 1;
+                }
+                if (winheight < 600) {
+                    top = 1;
+                }
+                
+                popupgeo.setXY([left, top]);
+            });
+            Y.one('.loadinggps').addClass('hide');
             Y.one('#updatepositionclick').removeClass('hide');
 
             // Try HTML5 geolocation
@@ -59,7 +94,7 @@ YUI.add('moodle-format_gps-popupgeo', function(Y) {
 
                 navigator.geolocation.getCurrentPosition(function(position) {
                     var pos = new google.maps.LatLng(position.coords.latitude,
-                    position.coords.longitude);
+                        position.coords.longitude);
                     map.setCenter(pos);
                     geocode({
                         'latLng': pos
@@ -75,11 +110,11 @@ YUI.add('moodle-format_gps-popupgeo', function(Y) {
             }
 
             clickIcon = new google.maps.MarkerImage(
-            MAPFILES_URL + 'dd-start.png',
-            new google.maps.Size(20, 34),
-            new google.maps.Point(0, 0),
-            new google.maps.Point(10, 34)
-        );
+                MAPFILES_URL + 'dd-start.png',
+                new google.maps.Size(20, 34),
+                new google.maps.Point(0, 0),
+                new google.maps.Point(10, 34)
+                );
 
             var geocode = function(request) {
 
@@ -97,7 +132,7 @@ YUI.add('moodle-format_gps-popupgeo', function(Y) {
                 request.bounds = map.getBounds();
             }
 
-            // end of search box code
+        // end of search box code
         },
 
         handleNoGeolocation : function(errorFlag) {
@@ -148,15 +183,53 @@ YUI.add('moodle-format_gps-popupgeo', function(Y) {
     requires:['event']
 });
 
-YUI().use('event', 'transition', 'panel', function(Y) {
+YUI().use('event', 'transition', 'panel', 'node', function(Y) {
+    
     // wait until the user focuses on an input element to start loading assets
     Y.on("click", function(e) {
 
-        panel.show();
+        var popupgeo = Y.one('.yui3-panel #popupgeo');
+        var target = e.target, height, width;
+        var left = e.pageX / 2;
+        var top = e.pageY / 2;
+        var winwidth = target.get('winWidth');
+        var winheight = target.get('winHeight');
+        var googlemap = Y.one('.googlemap');
+        var mapcontainer = Y.one('#mapcontainer');
 
-        Y.one('#popupgeo').removeClass('popupgeo');
+        height = (winheight * 0.9) - top;
+        width = (winwidth * 0.9) - left;
+
+        if (winwidth < 980) {
+            width = winwidth - 4;
+            height = winheight - 50;
+        }
+        top += 30;
+        console.log('Win Width: ' + winwidth + ', Win height: ' + winheight);
+        console.log('Width: ' + width + ', height: ' + height);
+        console.log('Clicked x = ' + left + ', Clicked y = ' + top);
+        googlemap.set('offsetHeight', height - 80);
+        googlemap.set('offsetWidth', width - 5);
+        panel.show();
+        popupgeo.removeClass('popupgeo');
+        popupgeo.addClass('popupgeoshow');
         M.format_gps.init_geo();
         M.format_gps.init_popupgeo();
+        googlemap.set('offsetHeight', height - 80);
+        googlemap.set('offsetWidth', width - 5);
+        mapcontainer.set('offsetHeight', height);
+        mapcontainer.set('offsetWidth', width - 3);
+        popupgeo.set('offsetHeight', height);
+        popupgeo.set('offsetWidth', width);
+
+        if (winwidth < 980 ) {
+            left = 1;
+        }
+        if (winheight < 600) {
+            top = 1;
+        }
+        popupgeo.setXY([left, top]);
+
 
     }, "#updatepositionclick");
 
@@ -165,10 +238,10 @@ YUI().use('event', 'transition', 'panel', function(Y) {
         srcNode      : '#popupgeo',
         headerContent: 'Your position',
         zIndex       : 5,
-        xy           : [50, 50],
         modal        : true,
         lightbox     : true,
         visible      : false,
+        draggable    : true,
         render       : true,
         plugins      : [Y.Plugin.Drag]
     });

@@ -1,5 +1,5 @@
 <?php
-// This file is part of the GPS free course format for Moodle - http://moodle.org/
+// This file is part of the Kamedia GPS course format for Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -81,7 +81,7 @@ function format_gps_check_proximity($topic, $location) {
 
     $locationlatitude = $topic->format_gps_latitude;
     $locationlongitude = $topic->format_gps_longitude;
-    $locationradius = 20;
+    $locationradius = $topic->format_gps_radius;
     $userlatitude = $location->latitude;
     $userlongitude = $location->longitude;
     $userlocation = new format_gps_haversine($userlatitude, $userlongitude, $locationlatitude, $locationlongitude);
@@ -98,7 +98,7 @@ function format_gps_check_proximity($topic, $location) {
 
 // Based on C++ code by Jochen Topf <jochen@topf.org>
 // See http://osmiumapi.openstreetmap.de/haversine_8hpp_source.html
-// Translated into PHP by Barry Oosthuizen
+// Translated into PHP and extended to cater for different distance units by Barry Oosthuizen
 class format_gps_haversine {
 
     public $radius;
@@ -106,7 +106,7 @@ class format_gps_haversine {
 
     public function __construct($x1, $y1, $x2, $y2) {
 
-        $this->radius = 6378100;
+        $this->radius = 6378100; // Meters.
         $this->distance = $this->get_distance($x1, $y1, $x2, $y2);
     }
 

@@ -1,5 +1,5 @@
 <?php
-// This file is part of the GPS free course format for Moodle - http://moodle.org/
+// This file is part of the Kamedia GPS course format for Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -19,7 +19,6 @@
  *
  * @since     2.0
  * @package   format_gps
- * @copyright 2009 Sam Hemelryk
  * @copyright 2013 Barry Oosthuizen
  * @author    2013 Barry Oosthuizen
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -380,23 +379,23 @@ class format_gps extends format_base {
      * @return array array of references to the added form elements
      */
     public function create_edit_form_elements(&$mform, $forsection = true) {
-        global $PAGE;
+        global $PAGE, $CFG;
 
         if ($PAGE->pagetype == 'course-edit') {
             return;
         }
         $validationerror = optional_param('validationerror', null, PARAM_INT);
+        $mform->addElement('header', 'gpssettings', new lang_string('editsection_geo_heading', 'format_gps'));
+        $mform->addHelpButton('gpssettings', 'gpshelp', 'format_gps');
         if ($validationerror == 'yes') {
             $error = html_writer::div(new lang_string('validationerror', 'format_gps'), 'bold red error');
             $errorlabel = html_writer::div(new lang_string('error'), 'bold red error');
             $mform->addElement('static', 'validationerrror', $errorlabel, $error);
             $mform->addHelpButton('validationerrror', 'errorhelp', 'format_gps');
         }
-        $mform->addElement('header', 'gpssettings', new lang_string('editsection_geo', 'format_gps'));
-        $mform->addHelpButton('gpssettings', 'gpshelp', 'format_gps');
         $mform->addElement('checkbox', 'format_gps_restricted', new lang_string('active', 'format_gps'));
-        $mform->setDefault('format_gps_restricted', 0);
-        $mform->addElement('text', 'format_gps_address', new lang_string('address', 'format_gps'));
+        $mform->setDefault('format_gps_restricted', FORMAT_GPS_UNRESTRICTED);
+        $mform->addElement('textarea', 'format_gps_address', new lang_string('address', 'format_gps'));
         $mform->setType('format_gps_address', PARAM_TEXT);
         $mform->addElement('text', 'format_gps_latitude', new lang_string('latitude', 'format_gps'));
         $mform->addElement('text', 'format_gps_longitude', new lang_string('longitude', 'format_gps'));
@@ -409,7 +408,6 @@ class format_gps extends format_base {
         $mform->disabledIf('format_gps_address', 'format_gps_restricted', 'notchecked');
         $mform->disabledIf('format_gps_latitude', 'format_gps_restricted', 'notchecked');
         $mform->disabledIf('format_gps_longitude', 'format_gps_restricted', 'notchecked');
-        
     }
 
     public function editsection_form($action, $customdata = array()) {
@@ -433,7 +431,6 @@ class format_gps extends format_base {
                 }
             }
         }
-
         return $form;
     }
 

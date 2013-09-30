@@ -1,5 +1,5 @@
 <?php
-// This file is part of the GPS free course format for Moodle - http://moodle.org/
+// This file is part of the Kamedia GPS course format for Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -27,9 +27,9 @@ require_once($CFG->dirroot . '/course/format/renderer.php');
 require_once($CFG->dirroot . '/course/format/gps/locallib.php');
 
 /**
- * Basic renderer for geo topics format.
+ * Basic renderer for gps pro format.
  *
- * @copyright 2012 Dan Poltawski
+ * @copyright 2013 Barry Oosthuizen
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class format_gps_renderer extends format_section_renderer_base {
@@ -46,7 +46,6 @@ class format_gps_renderer extends format_section_renderer_base {
      */
     public function print_single_section_page($course, $sections, $mods, $modnames, $modnamesused, $displaysection) {
         global $PAGE, $SESSION, $DB;
-
         $updateposition = get_string('updateposition', 'format_gps');
         $modaldiv = html_writer::div($updateposition, 'updateposition hide', array('id' => 'updatepositionclick'));
         echo $modaldiv;
@@ -61,6 +60,7 @@ class format_gps_renderer extends format_section_renderer_base {
         $mapcontainer = html_writer::div($map, 'mapcontainer', array('id' => 'mapcontainer'));
         $modalform = html_writer::div($mapcontainer . $updatecourseviewlink, 'popupgeo', array('id' => 'popupgeo'));
         echo $modalform;
+
         $modinfo = get_fast_modinfo($course);
         $course = course_get_format($course)->get_course();
         $thissection = $modinfo->get_section_info($displaysection);
@@ -115,8 +115,7 @@ class format_gps_renderer extends format_section_renderer_base {
             echo $this->start_section_list();
             echo $this->section_header($thissection, $course, true, $displaysection);
             $courserenderer = $PAGE->get_renderer('core', 'course');
-            echo $courserenderer->course_section_cm_list($course, $thissection, $displaysection);
-
+            print_section($course, $thissection, null, null, true, "100%", false, $displaysection);
             if ($PAGE->user_is_editing()) {
                 echo $courserenderer->course_section_add_cm_control($course, 0, $displaysection);
             }
@@ -152,6 +151,7 @@ class format_gps_renderer extends format_section_renderer_base {
 
         $courserenderer = $PAGE->get_renderer('core', 'course');
         echo $courserenderer->course_section_cm_list($course, $thissection, $displaysection);
+
         if ($PAGE->user_is_editing()) {
             echo $courserenderer->course_section_add_cm_control($course, $thissection, $displaysection);
         }
@@ -185,18 +185,21 @@ class format_gps_renderer extends format_section_renderer_base {
         global $PAGE, $SESSION, $DB, $USER;
 
         $updateposition = get_string('updateposition', 'format_gps');
+        $loadinggps = html_writer::div(get_string('loadinggps', 'format_gps'), 'loadinggps');
+        echo $loadinggps;
         $modaldiv = html_writer::div($updateposition, 'updateposition hide', array('id' => 'updatepositionclick'));
         echo $modaldiv;
 
         // Module form with map.
         $viewcourse = new moodle_url('/course/view.php', array('id' => $course->id));
-        $updatecourseviewlink = html_writer::empty_tag('br') .
-                                html_writer::link($viewcourse,
-                                get_string('updatepage', 'format_gps'),
+        $link = html_writer::link($viewcourse,
+                                get_string('update'),
                                 array('class' => 'gps-continue'));
+        $innerdiv = html_writer::div($link, 'innerdiv', array('id' => 'innerdiv'));
+        $updatecourseviewlink = html_writer::div(($innerdiv), 'buttonbubble', array('id' => 'outerdiv'));
         $map = html_writer::div('', 'googlemap', array('id' => 'map'));
-        $mapcontainer = html_writer::div($map, 'mapcontainer', array('id' => 'mapcontainer'));
-        $modalform = html_writer::div($mapcontainer . $updatecourseviewlink, 'popupgeo', array('id' => 'popupgeo'));
+        $mapcontainer = html_writer::div($map . $updatecourseviewlink, 'mapcontainer', array('id' => 'mapcontainer'));
+        $modalform = html_writer::div($mapcontainer, 'popupgeo', array('id' => 'popupgeo'));
         echo $modalform;
         $modinfo = get_fast_modinfo($course);
 
@@ -239,7 +242,7 @@ class format_gps_renderer extends format_section_renderer_base {
             // but showavailability is turned on (and there is some available info text).
             $proximity = new stdClass();
 
-            if ($thissection->format_gps_restricted == '1') {
+            if ($thissection->format_gps_restricted == FORMAT_GPS_RESTRICTED) {
                 if ($location) {
                     $proximity = format_gps_check_proximity($thissection, $location);
                 } else {
@@ -265,7 +268,9 @@ class format_gps_renderer extends format_section_renderer_base {
                             echo $this->gps_section_hidden($section);
                         }
                     } else if ($proximity->status == 'notallowed') {
-                        echo $this->gps_section_notallowed($section);
+                        if (!$course->hiddensections && $thissection->available) {
+                            echo $this->gps_section_notallowed($section);
+                        }
                     } else {
                         if (!$course->hiddensections && $thissection->available) {
                             echo $this->section_hidden($section);
@@ -470,7 +475,7 @@ class format_gps_renderer extends format_section_renderer_base {
     private function gps_get_user_location($userid) {
         global $DB;
         $location = false;
-        $elapsedtime = time() - 300;
+        $elapsedtime = time() - 30;
         if (!$location = $DB->get_record_select('format_gps_user', "userid = $userid AND timemodified > $elapsedtime")) {
             $location = false;
         }
