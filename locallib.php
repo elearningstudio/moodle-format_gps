@@ -104,7 +104,7 @@ class format_gps_haversine {
     public $radius;
     public $distance;
 
-    public function __construct($x1, $y1, $x2, $y2, $unit) {
+    public function __construct($x1, $y1, $x2, $y2) {
 
         $this->radius = 6378100;
         $this->distance = $this->get_distance($x1, $y1, $x2, $y2);
