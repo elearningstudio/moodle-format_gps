@@ -70,7 +70,6 @@ YUI.add('moodle-format_gps-popupgeo', function(Y) {
                 
                 popupgeo.setXY([left, top]);
             });
-            //Y.one('#updatepositionredirect').addClass('hide');
             Y.one('.loadinggps').addClass('hide');
             Y.one('#updatepositionclick').removeClass('hide');
 
