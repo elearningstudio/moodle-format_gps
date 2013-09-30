@@ -81,25 +81,12 @@ function format_gps_check_proximity($topic, $location) {
 
     $locationlatitude = $topic->format_gps_latitude;
     $locationlongitude = $topic->format_gps_longitude;
-    $locationradius = 50;
-    $locationunit = 'mt';
+    $locationradius = 20;
     $userlatitude = $location->latitude;
     $userlongitude = $location->longitude;
+    $userlocation = new format_gps_haversine($userlatitude, $userlongitude, $locationlatitude, $locationlongitude);
 
-    // Start of radius draw code.
-    $earthradiuses = array(
-        // The radius of the earth in various units.
-        'mi' => 3963.1676, // Miles.
-        'km' => 6378.1, // Kilometers.
-        'ft' => 20925524.9, // Feet.
-        'mt' => 6378100, // Meters.
-        'yd' => 6975174.98 // Yards.
-    );
-
-    $distance = format_gps_get_distance($userlatitude, $userlongitude,
-            $locationlatitude, $locationlongitude, $earthradiuses[$locationunit]);
-
-    if ($distance > $locationradius) {
+    if ($userlocation->distance > $locationradius) {
         // User is to far away.
         $proximity->status = 'toofar';
     } else {
@@ -109,15 +96,30 @@ function format_gps_check_proximity($topic, $location) {
     return $proximity;
 }
 
-function format_gps_get_distance($latitude1, $longitude1, $latitude2, $longitude2, $earthradius) {
+// Based on C++ code by Jochen Topf <jochen@topf.org>
+// See http://osmiumapi.openstreetmap.de/haversine_8hpp_source.html
+// Translated into PHP by Barry Oosthuizen
+class format_gps_haversine {
 
-    $latitudedifference = deg2rad($latitude2 - $latitude1);
-    $longitudedifference = deg2rad($longitude2 - $longitude1);
+    public $radius;
+    public $distance;
 
-    $a = sin($latitudedifference / 2) * sin($latitudedifference / 2) + cos(deg2rad($latitude1))
-    * cos(deg2rad($latitude2)) * sin($longitudedifference / 2) * sin($longitudedifference / 2);
-    $c = 2 * asin(sqrt($a));
-    $distance = $earthradius * $c;
+    public function __construct($x1, $y1, $x2, $y2) {
 
-    return $distance;
+        $this->radius = 6378100;
+        $this->distance = $this->get_distance($x1, $y1, $x2, $y2);
+    }
+
+    public function get_distance($x1, $y1, $x2, $y2) {
+        $lon_arc = deg2rad(($x1 - $x2));
+        $lat_arc = deg2rad(($y1 - $y2));
+        $lonh = sin($lon_arc * 0.5);
+        $lonh *= $lonh;
+        $lath = sin($lat_arc * 0.5);
+        $lath *= $lath;
+        $tmp = cos(deg2rad($y1)) * cos(deg2rad($y2));
+        $distance = 2 * $this->radius * asin(sqrt($lath + $tmp * $lonh));
+        return $distance;
+    }
+
 }
