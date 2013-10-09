@@ -84,6 +84,11 @@ body.format-gps .gps-continue:active {
     display: none;
 }
 
+.popupgeoshow {
+    display: block;
+    z-index: 100;
+}
+
 .centered {
     margin: 0 auto;
 }
@@ -100,6 +105,10 @@ div#updatepositionclick.updateposition.hide {
 }
 
 .loadinggps .hide{
+    display: none;
+}
+
+.hide {
     display: none;
 }
 
@@ -139,4 +148,8 @@ div#updatepositionclick.updateposition.hide {
     margin: 0 auto;
     max-height: 50px;
     padding:4px;
+}
+
+.course-content {
+    min-height: 600px !important;
 }

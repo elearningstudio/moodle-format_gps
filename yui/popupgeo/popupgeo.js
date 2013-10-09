@@ -48,8 +48,8 @@ YUI.add('moodle-format_gps-popupgeo', function(Y) {
                 width = (winwidth * 0.9);
 
                 if (winwidth < 980) {
-                    width = winwidth - 4;
-                    height = winheight - 50;
+                    width = winwidth - 50;
+                    height = winheight - 100;
                 }
                 console.log('Win Width: ' + winwidth + ', Win height: ' + winheight);
                 console.log('Width: ' + width + ', height: ' + height);
@@ -62,12 +62,9 @@ YUI.add('moodle-format_gps-popupgeo', function(Y) {
                 left = 50;
                 top = 50;
                 if (winwidth < 980 ) {
-                    left = 1;
+                    left = 15;
                 }
-                if (winheight < 600) {
-                    top = 1;
-                }
-                
+
                 popupgeo.setXY([left, top]);
             });
             Y.one('.loadinggps').addClass('hide');
@@ -184,11 +181,14 @@ YUI.add('moodle-format_gps-popupgeo', function(Y) {
 });
 
 YUI().use('event', 'transition', 'panel', 'node', function(Y) {
-    
+
     // wait until the user focuses on an input element to start loading assets
     Y.on("click", function(e) {
 
         var popupgeo = Y.one('.yui3-panel #popupgeo');
+        var page = Y.one('.course-content');
+        var pageheight = page.get('clientHeight');
+        var pagewidth = page.get('clientWidth');
         var target = e.target, height, width;
         var left = e.pageX / 2;
         var top = e.pageY / 2;
@@ -202,8 +202,10 @@ YUI().use('event', 'transition', 'panel', 'node', function(Y) {
 
         if (winwidth < 980) {
             width = winwidth - 4;
-            height = winheight - 50;
         }
+
+        height = pageheight - 50;
+
         top += 30;
         console.log('Win Width: ' + winwidth + ', Win height: ' + winheight);
         console.log('Width: ' + width + ', height: ' + height);
@@ -211,8 +213,10 @@ YUI().use('event', 'transition', 'panel', 'node', function(Y) {
         googlemap.set('offsetHeight', height - 80);
         googlemap.set('offsetWidth', width - 5);
         panel.show();
+        var mask = Y.one('.yui3-widget-mask');
         popupgeo.removeClass('popupgeo');
         popupgeo.addClass('popupgeoshow');
+        mask.addClass('hide');
         M.format_gps.init_geo();
         M.format_gps.init_popupgeo();
         googlemap.set('offsetHeight', height - 80);
@@ -237,7 +241,7 @@ YUI().use('event', 'transition', 'panel', 'node', function(Y) {
     var panel = new Y.Panel({
         srcNode      : '#popupgeo',
         headerContent: 'Your position',
-        zIndex       : 5,
+        zIndex       : 10000,
         modal        : true,
         lightbox     : true,
         visible      : false,
