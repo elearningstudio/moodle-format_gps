@@ -81,7 +81,7 @@ function format_gps_check_proximity($topic, $location) {
 
     $locationlatitude = $topic->format_gps_latitude;
     $locationlongitude = $topic->format_gps_longitude;
-    $locationradius = 20;
+    $locationradius = 50;
     $userlatitude = $location->latitude;
     $userlongitude = $location->longitude;
     $userlocation = new format_gps_haversine($userlatitude, $userlongitude, $locationlatitude, $locationlongitude);
