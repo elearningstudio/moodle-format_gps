@@ -273,6 +273,8 @@ class format_gps extends format_base {
      * @return bool whether there were any changes to the options values
      */
     public function update_course_format_options($data, $oldcourse = null) {
+        global $DB;
+
         if ($oldcourse !== null) {
             $data = (array) $data;
             $oldcourse = (array) $oldcourse;
@@ -336,37 +338,41 @@ class format_gps extends format_base {
                 return array();
             }
         }
+        if ($PAGE->pagetype == 'course-edit') {
+            return $this->course_format_options(true);
+        } else {
 
-        return array(
-            'format_gps_restricted' => array(
-                'type' => PARAM_INT,
-                'label' => new lang_string('restricted', 'format_gps'),
-                'element_type' => 'checkbox',
-                'cache' => true,
-                'default' => FORMAT_GPS_UNRESTRICTED,
-            ),
-            'format_gps_address' => array(
-                'type' => PARAM_TEXT,
-                'label' => new lang_string('address', 'format_gps'),
-                'element_type' => 'textarea',
-                'cache' => true,
-                'default' => '',
-            ),
-            'format_gps_latitude' => array(
-                'type' => PARAM_FLOAT,
-                'label' => new lang_string('latitude', 'format_gps'),
-                'element_type' => 'text',
-                'cache' => true,
-                'default' => '',
-            ),
-            'format_gps_longitude' => array(
-                'type' => PARAM_FLOAT,
-                'label' => new lang_string('longitude', 'format_gps'),
-                'element_type' => 'text',
-                'cache' => true,
-                'default' => '',
-            )
-        );
+            return array(
+                'format_gps_restricted' => array(
+                    'type' => PARAM_INT,
+                    'label' => new lang_string('restricted', 'format_gps'),
+                    'element_type' => 'checkbox',
+                    'cache' => true,
+                    'default' => FORMAT_GPS_UNRESTRICTED,
+                ),
+                'format_gps_address' => array(
+                    'type' => PARAM_TEXT,
+                    'label' => new lang_string('address', 'format_gps'),
+                    'element_type' => 'textarea',
+                    'cache' => true,
+                    'default' => '',
+                ),
+                'format_gps_latitude' => array(
+                    'type' => PARAM_FLOAT,
+                    'label' => new lang_string('latitude', 'format_gps'),
+                    'element_type' => 'text',
+                    'cache' => true,
+                    'default' => '',
+                ),
+                'format_gps_longitude' => array(
+                    'type' => PARAM_FLOAT,
+                    'label' => new lang_string('longitude', 'format_gps'),
+                    'element_type' => 'text',
+                    'cache' => true,
+                    'default' => '',
+                )
+            );
+        }
     }
 
     /**
@@ -382,32 +388,53 @@ class format_gps extends format_base {
         global $PAGE, $CFG;
 
         if ($PAGE->pagetype == 'course-edit') {
-            return;
+
+            $elements = parent::create_edit_form_elements($mform, $forsection);
+
+            // Increase the number of sections combo box values if the user has increased the number of sections
+            // using the icon on the course page beyond course 'maxsections' or course 'maxsections' has been
+            // reduced below the number of sections already set for the course on the site administration course
+            // defaults page.  This is so that the number of sections is not reduced leaving unintended orphaned
+            // activities / resources.
+            if (!$forsection) {
+                $maxsections = get_config('moodlecourse', 'maxsections');
+                $numsections = $mform->getElementValue('numsections');
+                $numsections = $numsections[0];
+                if ($numsections > $maxsections) {
+                    $element = $mform->getElement('numsections');
+                    for ($i = $maxsections+1; $i <= $numsections; $i++) {
+                        $element->addOption("$i", $i);
+                    }
+                }
+            }
+            return $elements;
+        } else {
+            $validationerror = optional_param('validationerror', null, PARAM_INT);
+            $mform->addElement('header', 'gpssettings', new lang_string('editsection_geo_heading', 'format_gps'));
+            $mform->addHelpButton('gpssettings', 'gpshelp', 'format_gps');
+            if ($validationerror == 'yes') {
+                $error = html_writer::div(new lang_string('validationerror', 'format_gps'), 'bold red error');
+                $errorlabel = html_writer::div(new lang_string('error'), 'bold red error');
+                $mform->addElement('static', 'validationerrror', $errorlabel, $error);
+                $mform->addHelpButton('validationerrror', 'errorhelp', 'format_gps');
+            }
+            $mform->addElement('checkbox', 'format_gps_restricted', new lang_string('active', 'format_gps'));
+            $mform->setDefault('format_gps_restricted', FORMAT_GPS_UNRESTRICTED);
+            $attributes = array('size' => '100', 'width' => '500', 'maxlength' => '100');
+            $mform->addElement('text', 'format_gps_address', new lang_string('address', 'format_gps'), $attributes);
+            $mform->setType('format_gps_address', PARAM_TEXT);
+            $mform->addElement('text', 'format_gps_latitude', new lang_string('latitude', 'format_gps'));
+            $mform->addElement('text', 'format_gps_longitude', new lang_string('longitude', 'format_gps'));
+            $mform->addRule('format_gps_address', null, 'maxlength', 255, 'client');
+            $mform->addRule('format_gps_longitude', null, 'numeric', null, 'client');
+            $mform->addRule('format_gps_longitude', null, 'numeric', null, 'client');
+            $mform->addRule('format_gps_latitude', null, 'numeric', null, 'client');
+            $mform->setType('format_gps_latitude', PARAM_FLOAT);
+            $mform->setType('format_gps_longitude', PARAM_FLOAT);
+            $mform->disabledIf('format_gps_address', 'format_gps_restricted', 'notchecked');
+            $mform->disabledIf('format_gps_latitude', 'format_gps_restricted', 'notchecked');
+            $mform->disabledIf('format_gps_longitude', 'format_gps_restricted', 'notchecked');
         }
-        $validationerror = optional_param('validationerror', null, PARAM_INT);
-        $mform->addElement('header', 'gpssettings', new lang_string('editsection_geo_heading', 'format_gps'));
-        $mform->addHelpButton('gpssettings', 'gpshelp', 'format_gps');
-        if ($validationerror == 'yes') {
-            $error = html_writer::div(new lang_string('validationerror', 'format_gps'), 'bold red error');
-            $errorlabel = html_writer::div(new lang_string('error'), 'bold red error');
-            $mform->addElement('static', 'validationerrror', $errorlabel, $error);
-            $mform->addHelpButton('validationerrror', 'errorhelp', 'format_gps');
-        }
-        $mform->addElement('checkbox', 'format_gps_restricted', new lang_string('active', 'format_gps'));
-        $mform->setDefault('format_gps_restricted', FORMAT_GPS_UNRESTRICTED);
-        $mform->addElement('textarea', 'format_gps_address', new lang_string('address', 'format_gps'));
-        $mform->setType('format_gps_address', PARAM_TEXT);
-        $mform->addElement('text', 'format_gps_latitude', new lang_string('latitude', 'format_gps'));
-        $mform->addElement('text', 'format_gps_longitude', new lang_string('longitude', 'format_gps'));
-        $mform->addRule('format_gps_address', null, 'maxlength', 255, 'client');
-        $mform->addRule('format_gps_longitude', null, 'numeric', null, 'client');
-        $mform->addRule('format_gps_longitude', null, 'numeric', null, 'client');
-        $mform->addRule('format_gps_latitude', null, 'numeric', null, 'client');
-        $mform->setType('format_gps_latitude', PARAM_FLOAT);
-        $mform->setType('format_gps_longitude', PARAM_FLOAT);
-        $mform->disabledIf('format_gps_address', 'format_gps_restricted', 'notchecked');
-        $mform->disabledIf('format_gps_latitude', 'format_gps_restricted', 'notchecked');
-        $mform->disabledIf('format_gps_longitude', 'format_gps_restricted', 'notchecked');
     }
 
     public function editsection_form($action, $customdata = array()) {
