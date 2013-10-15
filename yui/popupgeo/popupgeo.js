@@ -206,6 +206,14 @@ YUI().use('event', 'transition', 'panel', 'node', function(Y) {
 
         height = pageheight - 50;
 
+        if (height > winheight) {
+            height = winheight - 100;
+        }
+
+        if (height < 400) {
+            height = 400;
+        }
+
         top += 30;
         console.log('Win Width: ' + winwidth + ', Win height: ' + winheight);
         console.log('Width: ' + width + ', height: ' + height);
@@ -219,21 +227,20 @@ YUI().use('event', 'transition', 'panel', 'node', function(Y) {
         mask.addClass('hide');
         M.format_gps.init_geo();
         M.format_gps.init_popupgeo();
+        if (winwidth < 980 ) {
+            left = 1;
+        }
+        if (winheight < 600) {
+            top += 30;
+            height -= 60;
+        }
         googlemap.set('offsetHeight', height - 80);
         googlemap.set('offsetWidth', width - 5);
         mapcontainer.set('offsetHeight', height);
         mapcontainer.set('offsetWidth', width - 3);
         popupgeo.set('offsetHeight', height);
         popupgeo.set('offsetWidth', width);
-
-        if (winwidth < 980 ) {
-            left = 1;
-        }
-        if (winheight < 600) {
-            top = 1;
-        }
         popupgeo.setXY([left, top]);
-
 
     }, "#updatepositionclick");
 
